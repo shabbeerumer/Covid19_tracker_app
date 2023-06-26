@@ -35,126 +35,135 @@ class _worldStatesScreenState extends State<worldStatesScreen>
   @override
   Widget build(BuildContext context) {
     States_Services states_services = States_Services();
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * .01,
-              ),
-              Expanded(
-                child: FutureBuilder(
-                    future: states_services.FeatchWorldStateRecords(),
-                    builder:
-                        (context, AsyncSnapshot<WorldStatesModal> snapshot) {
-                      if (!snapshot.hasData) {
-                        return Expanded(
-                          flex: 1,
-                          child: SpinKitFadingCircle(
-                            color: Colors.white,
-                            size: 50.0,
-                            controller: _controller,
-                          ),
-                        );
-                      } else {
-                        print(
-                            double.parse(snapshot.data!.recovered.toString()));
-                        return SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              PieChart(
-                                dataMap: {
-                                  'Total': double.parse(
-                                      snapshot.data!.cases.toString()),
-                                  'Recovery': double.parse(
-                                      snapshot.data!.recovered.toString()),
-                                  'Deaths': double.parse(
-                                      snapshot.data!.deaths.toString()),
-                                },
-                                chartValuesOptions: const ChartValuesOptions(
-                                    showChartValuesInPercentage: true),
-                                chartType: ChartType.ring,
-                                animationDuration:
-                                    const Duration(milliseconds: 1200),
-                                colorList: colorList,
-                                chartRadius:
-                                    MediaQuery.of(context).size.width / 3.2,
-                                legendOptions: const LegendOptions(
-                                    legendPosition: LegendPosition.left),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical:
-                                        MediaQuery.of(context).size.height *
-                                            .06),
-                                child: Card(
-                                  child: Column(
-                                    children: [
-                                      ResuableRow(
-                                        value: snapshot.data!.cases.toString(),
-                                        title: 'TOTAL',
-                                      ),
-                                      ResuableRow(
-                                        value: snapshot.data!.deaths.toString(),
-                                        title: 'Deaths',
-                                      ),
-                                      ResuableRow(
-                                        value:
-                                            snapshot.data!.recovered.toString(),
-                                        title: 'Recovered',
-                                      ),
-                                      ResuableRow(
-                                        value: snapshot.data!.active.toString(),
-                                        title: 'Active',
-                                      ),
-                                      ResuableRow(
-                                        value:
-                                            snapshot.data!.critical.toString(),
-                                        title: 'Critical',
-                                      ),
-                                      ResuableRow(
-                                        value: snapshot.data!.todayDeaths
-                                            .toString(),
-                                        title: 'Today Deaths',
-                                      ),
-                                      ResuableRow(
-                                        value: snapshot.data!.todayRecovered
-                                            .toString(),
-                                        title: 'Today Recovered',
-                                      ),
-                                    ],
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * .01,
+                ),
+                Expanded(
+                  child: FutureBuilder(
+                      future: states_services.FeatchWorldStateRecords(),
+                      builder:
+                          (context, AsyncSnapshot<WorldStatesModal> snapshot) {
+                        if (!snapshot.hasData) {
+                          return Expanded(
+                            flex: 1,
+                            child: SpinKitFadingCircle(
+                              color: Colors.white,
+                              size: 50.0,
+                              controller: _controller,
+                            ),
+                          );
+                        } else {
+                          print(double.parse(
+                              snapshot.data!.recovered.toString()));
+                          return SingleChildScrollView(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                PieChart(
+                                  dataMap: {
+                                    'Total': double.parse(
+                                        snapshot.data!.cases.toString()),
+                                    'Recovery': double.parse(
+                                        snapshot.data!.recovered.toString()),
+                                    'Deaths': double.parse(
+                                        snapshot.data!.deaths.toString()),
+                                  },
+                                  chartValuesOptions: const ChartValuesOptions(
+                                      showChartValuesInPercentage: true),
+                                  chartType: ChartType.ring,
+                                  animationDuration:
+                                      const Duration(milliseconds: 1200),
+                                  colorList: colorList,
+                                  chartRadius:
+                                      MediaQuery.of(context).size.width / 3.2,
+                                  legendOptions: const LegendOptions(
+                                      legendPosition: LegendPosition.left),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                              .06),
+                                  child: Card(
+                                    child: Column(
+                                      children: [
+                                        ResuableRow(
+                                          value:
+                                              snapshot.data!.cases.toString(),
+                                          title: 'Total',
+                                        ),
+                                        ResuableRow(
+                                          value:
+                                              snapshot.data!.deaths.toString(),
+                                          title: 'Deaths',
+                                        ),
+                                        ResuableRow(
+                                          value: snapshot.data!.recovered
+                                              .toString(),
+                                          title: 'Recovered',
+                                        ),
+                                        ResuableRow(
+                                          value:
+                                              snapshot.data!.active.toString(),
+                                          title: 'Active',
+                                        ),
+                                        ResuableRow(
+                                          value: snapshot.data!.critical
+                                              .toString(),
+                                          title: 'Critical',
+                                        ),
+                                        ResuableRow(
+                                          value: snapshot.data!.todayDeaths
+                                              .toString(),
+                                          title: 'Today Deaths',
+                                        ),
+                                        ResuableRow(
+                                          value: snapshot.data!.todayRecovered
+                                              .toString(),
+                                          title: 'Today Recovered',
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const Countries_list()));
-                                },
-                                child: Container(
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: const Color(
-                                        0xff1aa260,
-                                      ),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: const Center(
-                                      child: Text('Track countries')),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const Countries_list()));
+                                  },
+                                  child: Container(
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                        color: const Color(
+                                          0xff1aa260,
+                                        ),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: const Center(
+                                        child: Text('Track countries')),
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    }),
-              ),
-            ],
+                              ],
+                            ),
+                          );
+                        }
+                      }),
+                ),
+              ],
+            ),
           ),
         ),
       ),
