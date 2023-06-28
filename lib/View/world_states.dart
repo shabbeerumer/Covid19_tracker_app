@@ -63,8 +63,6 @@ class _worldStatesScreenState extends State<worldStatesScreen>
                             ),
                           );
                         } else {
-                          print(double.parse(
-                              snapshot.data!.recovered.toString()));
                           return SingleChildScrollView(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
